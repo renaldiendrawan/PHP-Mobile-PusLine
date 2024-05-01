@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $id_artikel = $_GET['id_artikel'];
 
         // Query untuk mengambil data artikel berdasarkan id_artikel
-        $query = "SELECT a.judul, a.tanggal_publikasi, a.img_artikel, a.isi_artikel, p.nama AS nama_penulis 
+        $query = "SELECT a.id_artikel, a.judul, a.tanggal_publikasi, a.img_artikel, a.isi_artikel, p.nama AS nama_penulis 
                   FROM artikel a
                   INNER JOIN pegawai p ON a.nip = p.nip
                   WHERE a.id_artikel = '$id_artikel'";
@@ -22,15 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             // Ambil data artikel dari hasil query
             $row = mysqli_fetch_assoc($result);
 
-            // Konversi gambar ke base64
-            $row['img_artikel'] = base64_encode($row['img_artikel']);
-
             // Set header untuk tipe konten JSON
             header('Content-Type: application/json');
 
             // Mengatur status dan data dalam respons
             $response['status'] = 'success';
-            $response['data'] = $row; // Mengirim data judul, tanggal_publikasi, img_artikel, isi_artikel, dan nama_penulis ke Postman
+            $response['data'] = $row; // Mengirim data judul, tanggal_publikasi, img_artikel_path, isi_artikel, dan nama_penulis ke Postman
         } else {
             $response['status'] = 'error';
             $response['message'] = 'Artikel tidak ditemukan';
