@@ -1,0 +1,31 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Contoh aturan RewriteRule untuk mengubah URL
+    RewriteRule ^old-url$ new-url [R=301,L]
+
+    # Contoh aturan RewriteCond dan RewriteRule untuk mengubah URL dengan parameter
+    RewriteCond %{QUERY_STRING} ^id=123$
+    RewriteRule ^products$ products/123 [R=301,L]
+
+    # Contoh aturan untuk mengakses file secara langsung
+    <Files "file.txt">
+        Order Allow,Deny
+        Deny from all
+    </Files>
+
+    # Contoh aturan untuk mengizinkan akses ke file gambar
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.+)\.(jpg|jpeg|png|gif)$ /images/$1.$2 [L]
+
+    # Aturan untuk menonaktifkan index directory listing
+    Options -Indexes
+</IfModule>
+
+# Contoh aturan untuk menambahkan header ke response HTTP
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</IfModule>
