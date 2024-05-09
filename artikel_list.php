@@ -8,7 +8,7 @@ $response = array();
 // Mendapatkan data dari Postman dengan metode GET
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Query untuk mengambil img_artikel dan judul dari tabel artikel
-    $query = "SELECT img_artikel, judul FROM artikel";
+    $query = "SELECT id_artikel, img_artikel, judul FROM artikel";
     $result = mysqli_query($conn, $query);
 
     if ($result && mysqli_num_rows($result) > 0) {
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         while ($row = mysqli_fetch_assoc($result)) {
             $rowData[] = $row;
         }
-        
+
 
         $response['status'] = 'success';
         $response['data'] = $rowData; // Convert $rowData menjadi array

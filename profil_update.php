@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
 
             $response['status'] = 'success';
-            $response['data'] = $rowData; // Convert $rowData menjadi array
+            $response['data'] = $rowData[0]; // Convert $rowData menjadi array
         } else {
             $response['status'] = 'error';
             $response['message'] = 'Profil tidak ditemukan';
