@@ -44,8 +44,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $jenis_kelamin = mysqli_real_escape_string($conn, $_POST['jenis_kelamin']);
         $email = mysqli_real_escape_string($conn, $_POST['email']);
 
+        // Handle file upload
+        $img_profil = null;
+        if (isset($_FILES['img_profil']) && $_FILES['img_profil']['error'] == UPLOAD_ERR_OK) {
+            $target_dir = "flutter/foto_profil/"; // Sesuaikan dengan jalur folder yang benar
+            $target_file = $target_dir . basename($_FILES["img_profil"]["name"]);
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+            // Check if image file is a actual image or fake image
+            $check = getimagesize($_FILES["img_profil"]["tmp_name"]);
+            if ($check !== false) {
+                if (move_uploaded_file($_FILES["img_profil"]["tmp_name"], $target_file)) {
+                    $img_profil = basename($_FILES["img_profil"]["name"]); // Hanya menyimpan nama file di database
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Gagal mengupload gambar';
+                    echo json_encode($response);
+                    exit;
+                }
+            } else {
+                $response['status'] = 'error';
+                $response['message'] = 'File bukan gambar';
+                echo json_encode($response);
+                exit;
+            }
+        }
+
         // Query untuk mengupdate data masyarakat
-        $updateQuery = "UPDATE masyarakat SET nama = '$nama', tanggal_lahir = '$tanggal_lahir', jenis_kelamin = '$jenis_kelamin', email = '$email' WHERE nik = '$nik'";
+        $updateQuery = "UPDATE masyarakat SET nama = '$nama', tanggal_lahir = '$tanggal_lahir', jenis_kelamin = '$jenis_kelamin', email = '$email'";
+        if ($img_profil) {
+            $updateQuery .= ", img_profil = '$img_profil'";
+        }
+        $updateQuery .= " WHERE nik = '$nik'";
+
         $updateResult = mysqli_query($conn, $updateQuery);
 
         if ($updateResult) {
